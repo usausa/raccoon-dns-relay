@@ -2,7 +2,6 @@ namespace Raccoon.DnsRelay.Telemetry;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;

@@ -40,6 +40,7 @@ internal sealed class UpstreamDnsResolver : IDnsResolver
             var endpoint = upstreams[i];
             var name = upstreamNames[i];
 
+            // ReSharper disable once ExplicitCallerInfoArgument
             using var activity = DnsRelayTelemetry.ActivitySource.StartActivity("dns.relay.upstream");
             activity?.SetTag("server.address", name);
             metrics.UpstreamRequest(name);
