@@ -1,9 +1,7 @@
 namespace Raccoon.DnsRelay.Caching;
 
-/// <summary>
-/// A cached response. Stored once as a right-sized array (long-lived and stable),
-/// keeping per-request churn off the GC heap.
-/// </summary>
+// A cached response. Stored once as a right-sized array (long-lived and stable),
+// keeping per-request churn off the GC heap
 internal readonly struct CacheEntry
 {
     private readonly byte[]? response;

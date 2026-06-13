@@ -1,16 +1,14 @@
-namespace Raccoon.DnsRelay.Resolving;
+namespace Raccoon.DnsRelay.Resolver;
 
 using Microsoft.Extensions.Options;
 
-using Raccoon.DnsRelay.Buffers;
-using Raccoon.DnsRelay.Configuration;
-using Raccoon.DnsRelay.Diagnostics;
+using Raccoon.DnsRelay.Helpers;
 using Raccoon.DnsRelay.Protocol;
+using Raccoon.DnsRelay.Settings;
+using Raccoon.DnsRelay.Telemetry;
 
-/// <summary>
-/// Forwards the raw query to the configured upstream servers in order,
-/// falling over to the next one on timeout or socket error.
-/// </summary>
+// Forwards the raw query to the configured upstream servers in order,
+// falling over to the next one on timeout or socket error
 internal sealed class UpstreamDnsResolver : IDnsResolver
 {
     private readonly IPEndPoint[] upstreams;
@@ -21,8 +19,8 @@ internal sealed class UpstreamDnsResolver : IDnsResolver
     private readonly ILogger<UpstreamDnsResolver> log;
 
     public UpstreamDnsResolver(
-        IOptions<UpstreamOptions> options,
-        IOptions<ServerOptions> serverOptions,
+        IOptions<UpstreamSetting> options,
+        IOptions<ServerSetting> serverOptions,
         DnsRelayMetrics metrics,
         ILogger<UpstreamDnsResolver> log)
     {

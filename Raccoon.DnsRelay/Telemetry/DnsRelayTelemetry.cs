@@ -1,4 +1,4 @@
-namespace Raccoon.DnsRelay.Diagnostics;
+namespace Raccoon.DnsRelay.Telemetry;
 
 internal static class DnsRelayTelemetry
 {

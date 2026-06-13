@@ -2,9 +2,7 @@ namespace Raccoon.DnsRelay.Protocol;
 
 using System.Buffers.Binary;
 
-/// <summary>
-/// The fixed 12-byte DNS message header (RFC 1035 section 4.1.1).
-/// </summary>
+// The fixed 12-byte DNS message header (RFC 1035 section 4.1.1)
 internal readonly struct DnsHeader
 {
     public const int Length = 12;
@@ -40,7 +38,7 @@ internal readonly struct DnsHeader
             QuestionCount = BinaryPrimitives.ReadUInt16BigEndian(message[4..]),
             AnswerCount = BinaryPrimitives.ReadUInt16BigEndian(message[6..]),
             AuthorityCount = BinaryPrimitives.ReadUInt16BigEndian(message[8..]),
-            AdditionalCount = BinaryPrimitives.ReadUInt16BigEndian(message[10..]),
+            AdditionalCount = BinaryPrimitives.ReadUInt16BigEndian(message[10..])
         };
         return true;
     }

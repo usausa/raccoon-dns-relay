@@ -1,4 +1,4 @@
-namespace Raccoon.DnsRelay.Resolving;
+namespace Raccoon.DnsRelay.Resolver;
 
 internal interface IDnsResolver
 {

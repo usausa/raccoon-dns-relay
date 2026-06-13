@@ -1,6 +1,6 @@
-namespace Raccoon.DnsRelay.Configuration;
+namespace Raccoon.DnsRelay.Settings;
 
-internal sealed class ServerOptions
+internal sealed class ServerSetting
 {
     public const string SectionName = "Server";
 

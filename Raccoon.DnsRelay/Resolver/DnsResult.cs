@@ -1,11 +1,9 @@
-namespace Raccoon.DnsRelay.Resolving;
+namespace Raccoon.DnsRelay.Resolver;
 
-using Raccoon.DnsRelay.Buffers;
+using Raccoon.DnsRelay.Helpers;
 
-/// <summary>
-/// Owns the response bytes produced by a resolver. The listener sends
-/// <see cref="Memory"/> and then disposes the result exactly once.
-/// </summary>
+// Owns the response bytes produced by a resolver. The listener sends
+// Memory and then disposes the result exactly once
 internal readonly struct DnsResult : IDisposable
 {
     private readonly RentedBuffer buffer;

@@ -1,11 +1,9 @@
-namespace Raccoon.DnsRelay.Diagnostics;
+namespace Raccoon.DnsRelay.Telemetry;
 
 using System.Diagnostics.Metrics;
 
-/// <summary>
-/// Holds the relay's instruments. The <see cref="Meter"/> is always present; when no
-/// OpenTelemetry listener is attached the record calls are cheap no-ops.
-/// </summary>
+// Holds the relay's instruments. The Meter is always present; when no
+// OpenTelemetry listener is attached the record calls are cheap no-ops
 internal sealed class DnsRelayMetrics : IDisposable
 {
     public const string MeterName = "Raccoon.DnsRelay";

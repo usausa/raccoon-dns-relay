@@ -1,10 +1,8 @@
 namespace Raccoon.DnsRelay.Caching;
 
-/// <summary>
-/// Cache key built from a question's wire bytes (QNAME + QTYPE + QCLASS).
-/// The name portion is ASCII-lowercased (DNS names are case-insensitive); the
-/// trailing 4 type/class bytes are kept exact. A 64-bit FNV-1a hash is precomputed.
-/// </summary>
+// Cache key built from a question's wire bytes (QNAME + QTYPE + QCLASS).
+// The name portion is ASCII-lowercased (DNS names are case-insensitive); the
+// trailing 4 type/class bytes are kept exact. A 64-bit FNV-1a hash is precomputed
 internal readonly struct QueryKey : IEquatable<QueryKey>
 {
     private const ulong FnvOffsetBasis = 14695981039346656037;

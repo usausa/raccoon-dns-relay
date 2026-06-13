@@ -3,10 +3,8 @@ namespace Raccoon.DnsRelay.Protocol;
 using System.Buffers.Binary;
 using System.Text;
 
-/// <summary>
-/// Minimal, allocation-free DNS message reading. Only the fields a relay needs
-/// (header, first question and the minimum TTL) are parsed.
-/// </summary>
+// Minimal, allocation-free DNS message reading. Only the fields a relay needs
+// (header, first question and the minimum TTL) are parsed
 internal static class DnsMessageParser
 {
     private const int OptRecordType = 41;
@@ -60,10 +58,8 @@ internal static class DnsMessageParser
         return true;
     }
 
-    /// <summary>
-    /// Returns the smallest record TTL in the message (excluding the EDNS OPT record),
-    /// or 0 when there is no usable TTL.
-    /// </summary>
+    // Returns the smallest record TTL in the message (excluding the EDNS OPT record),
+    // or 0 when there is no usable TTL
     public static uint ExtractMinTtl(ReadOnlySpan<byte> message)
     {
         if (!DnsHeader.TryRead(message, out var header))
@@ -105,9 +101,7 @@ internal static class DnsMessageParser
         return min == uint.MaxValue ? 0 : min;
     }
 
-    /// <summary>
-    /// Advances <paramref name="offset"/> past a (possibly compressed) domain name.
-    /// </summary>
+    // Advances offset past a (possibly compressed) domain name
     public static bool TrySkipName(ReadOnlySpan<byte> message, ref int offset)
     {
         while (offset < message.Length)
@@ -132,9 +126,7 @@ internal static class DnsMessageParser
         return false;
     }
 
-    /// <summary>
-    /// Decodes a question name into a dotted string. Used only for diagnostic logging.
-    /// </summary>
+    // Decodes a question name into a dotted string. Used only for diagnostic logging
     public static string ReadName(ReadOnlySpan<byte> message, int nameOffset)
     {
         var builder = new StringBuilder(64);

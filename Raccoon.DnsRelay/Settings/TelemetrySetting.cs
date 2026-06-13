@@ -1,6 +1,6 @@
-namespace Raccoon.DnsRelay.Configuration;
+namespace Raccoon.DnsRelay.Settings;
 
-internal sealed class TelemetryOptions
+internal sealed class TelemetrySetting
 {
     public const string SectionName = "Telemetry";
 
@@ -14,20 +14,20 @@ internal sealed class TelemetryOptions
 
     public bool EnableRuntimeInstrumentation { get; set; }
 
-    public OtlpOptions Otlp { get; set; } = new();
+    public OtlpSetting Otlp { get; set; } = new();
 
-    public PrometheusOptions Prometheus { get; set; } = new();
+    public PrometheusSetting Prometheus { get; set; } = new();
 
     public bool EnableConsoleExporter { get; set; }
 
-    internal sealed class OtlpOptions
+    internal sealed class OtlpSetting
     {
         public string? Endpoint { get; set; }
 
         public string Protocol { get; set; } = "Grpc";
     }
 
-    internal sealed class PrometheusOptions
+    internal sealed class PrometheusSetting
     {
         public bool Enabled { get; set; }
 

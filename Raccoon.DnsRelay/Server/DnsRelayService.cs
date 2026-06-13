@@ -1,10 +1,9 @@
-namespace Raccoon.DnsRelay;
+namespace Raccoon.DnsRelay.Server;
 
-using Raccoon.DnsRelay.Buffers;
-using Raccoon.DnsRelay.Diagnostics;
+using Raccoon.DnsRelay.Helpers;
 using Raccoon.DnsRelay.Protocol;
-using Raccoon.DnsRelay.Resolving;
-using Raccoon.DnsRelay.Server;
+using Raccoon.DnsRelay.Resolver;
+using Raccoon.DnsRelay.Telemetry;
 
 internal sealed class DnsRelayService : BackgroundService
 {
@@ -32,6 +31,7 @@ internal sealed class DnsRelayService : BackgroundService
         metrics.IncrementActive();
         var startTimestamp = Stopwatch.GetTimestamp();
         var resultLabel = "invalid";
+        // ReSharper disable once ExplicitCallerInfoArgument
         using var activity = DnsRelayTelemetry.ActivitySource.StartActivity("dns.relay.query");
         try
         {

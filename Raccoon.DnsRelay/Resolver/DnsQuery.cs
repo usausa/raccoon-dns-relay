@@ -1,4 +1,4 @@
-namespace Raccoon.DnsRelay.Resolving;
+namespace Raccoon.DnsRelay.Resolver;
 
 using Raccoon.DnsRelay.Protocol;
 
@@ -17,9 +17,7 @@ internal readonly struct DnsQuery
 
     public DnsQuestion Question { get; }
 
-    /// <summary>
-    /// The question wire slice (QNAME + QTYPE + QCLASS) used as the cache key.
-    /// Recomputed on each access so it never crosses an await boundary.
-    /// </summary>
+    // The question wire slice (QNAME + QTYPE + QCLASS) used as the cache key.
+    // Recomputed on each access so it never crosses an await boundary
     public ReadOnlySpan<byte> QuestionSpan => RawMessage.Span.Slice(Question.NameOffset, Question.NameLength + 4);
 }

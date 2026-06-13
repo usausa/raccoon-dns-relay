@@ -1,4 +1,4 @@
-namespace Raccoon.DnsRelay.Diagnostics;
+namespace Raccoon.DnsRelay.Telemetry;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,11 +8,11 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-using Raccoon.DnsRelay.Configuration;
+using Raccoon.DnsRelay.Settings;
 
 internal static class OpenTelemetryExtensions
 {
-    public static IServiceCollection AddDnsRelayTelemetry(this IServiceCollection services, TelemetryOptions options)
+    public static IServiceCollection AddDnsRelayTelemetry(this IServiceCollection services, TelemetrySetting options)
     {
         if (!options.Enabled)
         {
@@ -74,7 +74,7 @@ internal static class OpenTelemetryExtensions
         return services;
     }
 
-    private static void ConfigureOtlp(OtlpExporterOptions exporter, TelemetryOptions.OtlpOptions otlp)
+    private static void ConfigureOtlp(OtlpExporterOptions exporter, TelemetrySetting.OtlpSetting otlp)
     {
         exporter.Endpoint = new Uri(otlp.Endpoint!);
         exporter.Protocol = string.Equals(otlp.Protocol, "HttpProtobuf", StringComparison.OrdinalIgnoreCase)

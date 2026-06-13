@@ -1,19 +1,17 @@
-namespace Raccoon.DnsRelay.Resolving;
+namespace Raccoon.DnsRelay.Resolver;
 
 using System.Buffers.Binary;
 
 using Microsoft.Extensions.Options;
 
-using Raccoon.DnsRelay.Buffers;
 using Raccoon.DnsRelay.Caching;
-using Raccoon.DnsRelay.Configuration;
-using Raccoon.DnsRelay.Diagnostics;
+using Raccoon.DnsRelay.Helpers;
 using Raccoon.DnsRelay.Protocol;
+using Raccoon.DnsRelay.Settings;
+using Raccoon.DnsRelay.Telemetry;
 
-/// <summary>
-/// Decorator that serves responses from <see cref="IDnsCache"/> when possible and
-/// stores successful (and optionally negative) responses from the inner resolver.
-/// </summary>
+// Decorator that serves responses from IDnsCache when possible and
+// stores successful (and optionally negative) responses from the inner resolver
 internal sealed class CachingDnsResolver : IDnsResolver
 {
     private const int NoError = 0;
@@ -21,11 +19,11 @@ internal sealed class CachingDnsResolver : IDnsResolver
 
     private readonly IDnsResolver inner;
     private readonly IDnsCache cache;
-    private readonly CacheOptions options;
+    private readonly CacheSetting options;
     private readonly DnsRelayMetrics metrics;
     private readonly ILogger<CachingDnsResolver> log;
 
-    public CachingDnsResolver(IDnsResolver inner, IDnsCache cache, IOptions<CacheOptions> options, DnsRelayMetrics metrics, ILogger<CachingDnsResolver> log)
+    public CachingDnsResolver(IDnsResolver inner, IDnsCache cache, IOptions<CacheSetting> options, DnsRelayMetrics metrics, ILogger<CachingDnsResolver> log)
     {
         this.inner = inner;
         this.cache = cache;

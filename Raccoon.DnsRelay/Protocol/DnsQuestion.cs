@@ -1,9 +1,7 @@
 namespace Raccoon.DnsRelay.Protocol;
 
-/// <summary>
-/// The first question of a DNS message, kept as offsets into the owning message
-/// so the wire-format name can be hashed for the cache key without allocating a string.
-/// </summary>
+// The first question of a DNS message, kept as offsets into the owning message
+// so the wire-format name can be hashed for the cache key without allocating a string
 internal readonly struct DnsQuestion
 {
     public DnsQuestion(int nameOffset, int nameLength, ushort type, ushort @class)

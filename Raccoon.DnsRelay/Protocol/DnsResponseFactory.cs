@@ -6,10 +6,8 @@ internal static class DnsResponseFactory
 {
     private const int OptRecordType = 41;
 
-    /// <summary>
-    /// Writes a minimal SERVFAIL response (header + the original question) into
-    /// <paramref name="destination"/> and returns the number of bytes written.
-    /// </summary>
+    // Writes a minimal SERVFAIL response (header + the original question) into
+    // destination and returns the number of bytes written
     public static int WriteServerFailure(ReadOnlySpan<byte> query, int questionEnd, Span<byte> destination)
     {
         query[..questionEnd].CopyTo(destination);
@@ -26,11 +24,9 @@ internal static class DnsResponseFactory
         return questionEnd;
     }
 
-    /// <summary>
-    /// Subtracts <paramref name="elapsedSeconds"/> from every record TTL in place
-    /// (clamped at 0), so a cached response reflects the remaining lifetime.
-    /// The EDNS OPT record is left untouched.
-    /// </summary>
+    // Subtracts elapsedSeconds from every record TTL in place
+    // (clamped at 0), so a cached response reflects the remaining lifetime.
+    // The EDNS OPT record is left untouched
     public static void DecrementTtls(Span<byte> message, uint elapsedSeconds)
     {
         if (!DnsHeader.TryRead(message, out var header))

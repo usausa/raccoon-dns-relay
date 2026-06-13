@@ -1,6 +1,6 @@
-namespace Raccoon.DnsRelay.Configuration;
+namespace Raccoon.DnsRelay.Settings;
 
-internal sealed class UpstreamOptions
+internal sealed class UpstreamSetting
 {
     public const string SectionName = "Upstream";
 

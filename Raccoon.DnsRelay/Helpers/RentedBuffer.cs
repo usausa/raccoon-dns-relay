@@ -1,9 +1,7 @@
-namespace Raccoon.DnsRelay.Buffers;
+namespace Raccoon.DnsRelay.Helpers;
 
-/// <summary>
-/// Owns a buffer rented from <see cref="ArrayPool{T}"/> and returns it on dispose.
-/// Keeps per-request allocations off the GC heap on the hot path.
-/// </summary>
+// Owns a buffer rented from ArrayPool<T> and returns it on dispose.
+// Keeps per-request allocations off the GC heap on the hot path
 internal readonly struct RentedBuffer : IDisposable
 {
     private readonly byte[]? array;

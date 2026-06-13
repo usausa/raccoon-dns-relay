@@ -4,21 +4,19 @@ using System.Collections.Concurrent;
 
 using Microsoft.Extensions.Options;
 
-using Raccoon.DnsRelay.Configuration;
+using Raccoon.DnsRelay.Settings;
 
-/// <summary>
-/// TTL cache keyed by the question wire bytes. Lookups use an alternate
-/// <see cref="ReadOnlySpan{T}"/> lookup (no key allocation), expiry is lazy
-/// (checked on read), and bounding is done by a periodic sweep plus approximate
-/// eviction without sorting.
-/// </summary>
+// TTL cache keyed by the question wire bytes. Lookups use an alternate
+// ReadOnlySpan<byte> lookup (no key allocation), expiry is lazy
+// (checked on read), and bounding is done by a periodic sweep plus approximate
+// eviction without sorting
 internal sealed class DnsCache : IDnsCache, IDisposable
 {
     private readonly ConcurrentDictionary<QueryKey, CacheEntry> entries;
     private readonly int maxEntries;
     private readonly Timer cleanupTimer;
 
-    public DnsCache(IOptions<CacheOptions> options)
+    public DnsCache(IOptions<CacheSetting> options)
     {
         var value = options.Value;
         maxEntries = value.MaxEntries;

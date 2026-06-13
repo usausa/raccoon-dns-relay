@@ -2,24 +2,22 @@ namespace Raccoon.DnsRelay.Server;
 
 using Microsoft.Extensions.Options;
 
-using Raccoon.DnsRelay.Configuration;
-using Raccoon.DnsRelay.Diagnostics;
 using Raccoon.DnsRelay.Protocol;
+using Raccoon.DnsRelay.Settings;
+using Raccoon.DnsRelay.Telemetry;
 
-/// <summary>
-/// Receives DNS queries over UDP using a raw socket and pooled buffers,
-/// dispatching each datagram to the handler under a concurrency limit.
-/// </summary>
+// Receives DNS queries over UDP using a raw socket and pooled buffers,
+// dispatching each datagram to the handler under a concurrency limit
 internal sealed class UdpDnsListener : IDnsListener
 {
-    private readonly ServerOptions options;
+    private readonly ServerSetting options;
     private readonly DnsRelayMetrics metrics;
     private readonly ILogger<UdpDnsListener> log;
     private readonly SemaphoreSlim throttle;
 
     private Socket? socket;
 
-    public UdpDnsListener(IOptions<ServerOptions> options, DnsRelayMetrics metrics, ILogger<UdpDnsListener> log)
+    public UdpDnsListener(IOptions<ServerSetting> options, DnsRelayMetrics metrics, ILogger<UdpDnsListener> log)
     {
         this.options = options.Value;
         this.metrics = metrics;
@@ -67,7 +65,7 @@ internal sealed class UdpDnsListener : IDnsListener
                 continue;
             }
 
-            if (!throttle.Wait(0, CancellationToken.None))
+            if (!await throttle.WaitAsync(0, CancellationToken.None))
             {
                 pool.Return(array);
                 metrics.QueryDropped("overload");

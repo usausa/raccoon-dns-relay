@@ -1,6 +1,6 @@
-namespace Raccoon.DnsRelay.Configuration;
+namespace Raccoon.DnsRelay.Settings;
 
-internal sealed class CacheOptions
+internal sealed class CacheSetting
 {
     public const string SectionName = "Cache";
 

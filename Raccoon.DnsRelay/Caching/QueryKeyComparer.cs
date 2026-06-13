@@ -1,10 +1,8 @@
 namespace Raccoon.DnsRelay.Caching;
 
-/// <summary>
-/// Equality comparer for <see cref="QueryKey"/> that also supports looking up entries
-/// directly from a raw <see cref="ReadOnlySpan{T}"/> question slice, so a cache hit does
-/// not allocate a key.
-/// </summary>
+// Equality comparer for QueryKey that also supports looking up entries
+// directly from a raw ReadOnlySpan<byte> question slice, so a cache hit does
+// not allocate a key
 internal sealed class QueryKeyComparer :
     IEqualityComparer<QueryKey>,
     IAlternateEqualityComparer<ReadOnlySpan<byte>, QueryKey>
