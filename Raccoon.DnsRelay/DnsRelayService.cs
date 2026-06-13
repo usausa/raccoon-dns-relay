@@ -1,0 +1,82 @@
+namespace Raccoon.DnsRelay;
+
+using Raccoon.DnsRelay.Buffers;
+using Raccoon.DnsRelay.Diagnostics;
+using Raccoon.DnsRelay.Protocol;
+using Raccoon.DnsRelay.Resolving;
+using Raccoon.DnsRelay.Server;
+
+internal sealed class DnsRelayService : BackgroundService
+{
+    private readonly IDnsListener listener;
+    private readonly IDnsResolver resolver;
+    private readonly DnsRelayMetrics metrics;
+    private readonly ILogger<DnsRelayService> log;
+
+    public DnsRelayService(IDnsListener listener, IDnsResolver resolver, DnsRelayMetrics metrics, ILogger<DnsRelayService> log)
+    {
+        this.listener = listener;
+        this.resolver = resolver;
+        this.metrics = metrics;
+        this.log = log;
+    }
+
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        return listener.RunAsync(HandleQueryAsync, stoppingToken);
+    }
+
+    private async ValueTask<DnsResult> HandleQueryAsync(DnsRequest request, CancellationToken cancellationToken)
+    {
+        metrics.QueryReceived();
+        metrics.IncrementActive();
+        var startTimestamp = Stopwatch.GetTimestamp();
+        var resultLabel = "invalid";
+        using var activity = DnsRelayTelemetry.ActivitySource.StartActivity("dns.relay.query");
+        try
+        {
+            DnsQuery query;
+
+            // Parse synchronously so the span does not cross an await.
+            {
+                var message = request.Query.Span;
+                if (!DnsMessageParser.TryReadHeader(message, out var header) ||
+                    (header.QuestionCount == 0) ||
+                    !DnsMessageParser.TryReadQuestion(message, out var question))
+                {
+                    log.DebugInvalidQuery();
+                    return DnsResult.Empty;
+                }
+
+                if (log.IsEnabled(LogLevel.Debug))
+                {
+                    log.DebugQueryReceived(header.Id, DnsMessageParser.ReadName(message, question.NameOffset), question.Type);
+                }
+
+                activity?.SetTag("dns.transaction_id", (int)header.Id);
+                activity?.SetTag("dns.question_type", (int)question.Type);
+                query = new DnsQuery(request.Query, header.Id, question);
+            }
+
+            var result = await resolver.ResolveAsync(query, cancellationToken);
+            if (result.Success)
+            {
+                resultLabel = "resolved";
+                return result;
+            }
+
+            // Every upstream failed: synthesize a SERVFAIL so the client is not left waiting.
+            resultLabel = "servfail";
+            var questionEnd = query.Question.NameOffset + query.Question.NameLength + 4;
+            var buffer = RentedBuffer.Rent(questionEnd);
+            var length = DnsResponseFactory.WriteServerFailure(request.Query.Span, questionEnd, buffer.Span);
+            return new DnsResult(buffer, length);
+        }
+        finally
+        {
+            metrics.DecrementActive();
+            metrics.RecordDuration(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds, resultLabel);
+            activity?.SetTag("dns.result", resultLabel);
+        }
+    }
+}

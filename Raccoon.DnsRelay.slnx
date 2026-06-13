@@ -12,4 +12,5 @@
     <File Path="Raccoon.DnsRelay.sln.DotSettings" />
     <File Path="README.md" />
   </Folder>
+  <Project Path="Raccoon.DnsRelay/Raccoon.DnsRelay.csproj" />
 </Solution>
