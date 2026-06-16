@@ -154,4 +154,21 @@ internal static class DnsMessageParser
 
         return builder.Length == 0 ? "." : builder.ToString();
     }
+
+    // Maps a question QTYPE to its mnemonic for diagnostic logging, falling back to TYPE<n>
+    public static string TypeToText(ushort type) => type switch
+    {
+        1 => "A",
+        2 => "NS",
+        5 => "CNAME",
+        6 => "SOA",
+        12 => "PTR",
+        15 => "MX",
+        16 => "TXT",
+        28 => "AAAA",
+        33 => "SRV",
+        65 => "HTTPS",
+        255 => "ANY",
+        _ => string.Create(CultureInfo.InvariantCulture, $"TYPE{type}"),
+    };
 }

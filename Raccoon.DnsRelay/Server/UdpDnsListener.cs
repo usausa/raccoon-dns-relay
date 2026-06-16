@@ -17,6 +17,9 @@ internal sealed class UdpDnsListener : IDnsListener
 
     private Socket? socket;
 
+    // Reused to materialize each client's IPEndPoint from its received SocketAddress (set in RunAsync).
+    private IPEndPoint clientEndPointTemplate = new(IPAddress.Any, 0);
+
     public UdpDnsListener(IOptions<ServerSetting> options, DnsRelayMetrics metrics, ILogger<UdpDnsListener> log)
     {
         this.options = options.Value;
@@ -28,6 +31,7 @@ internal sealed class UdpDnsListener : IDnsListener
     public async Task RunAsync(DnsQueryHandler handler, CancellationToken cancellationToken)
     {
         var endpoint = new IPEndPoint(IPAddress.Parse(options.Address), options.Port);
+        clientEndPointTemplate = new(endpoint.Address, 0);
         var listenSocket = new Socket(endpoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
         listenSocket.Bind(endpoint);
         socket = listenSocket;
@@ -82,7 +86,8 @@ internal sealed class UdpDnsListener : IDnsListener
     {
         try
         {
-            var request = new DnsRequest(array.AsMemory(0, received));
+            var client = (IPEndPoint)clientEndPointTemplate.Create(clientAddress);
+            var request = new DnsRequest(array.AsMemory(0, received), client);
             var result = await handler(request, cancellationToken);
             try
             {

@@ -38,8 +38,13 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Debug, Message = "Invalid query received.")]
     public static partial void DebugInvalidQuery(this ILogger logger);
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Query id=[{id}] name=[{name}] type=[{type}]")]
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Query. id=[{id}], name=[{name}], type=[{type}]")]
     public static partial void DebugQueryReceived(this ILogger logger, ushort id, string name, ushort type);
+
+    // Query
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Query. client=[{client}], name=[{name}], type=[{type}], result=[{result}]")]
+    public static partial void InfoQueryResolved(this ILogger logger, string client, string name, string type, string result);
 
     // Upstream
 
@@ -54,6 +59,6 @@ internal static partial class Log
 
     // Cache
 
-    [LoggerMessage(Level = LogLevel.Debug, Message = "Cache hit id=[{id}].")]
+    [LoggerMessage(Level = LogLevel.Debug, Message = "Cache hit. id=[{id}].")]
     public static partial void DebugCacheHit(this ILogger logger, ushort id);
 }
