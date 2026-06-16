@@ -10,6 +10,7 @@ using Raccoon.DnsRelay.Settings;
 using Raccoon.DnsRelay.Telemetry;
 
 using Serilog;
+using Serilog.Settings.Configuration;
 
 Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
@@ -24,7 +25,11 @@ builder.Services
 builder.Logging.ClearProviders();
 builder.Services.AddSerilog(options =>
 {
-    options.ReadFrom.Configuration(builder.Configuration);
+    options.ReadFrom.Configuration(
+        builder.Configuration,
+        new ConfigurationReaderOptions(
+            typeof(ConsoleLoggerConfigurationExtensions).Assembly,
+            typeof(FileLoggerConfigurationExtensions).Assembly));
 });
 
 // Options

@@ -23,4 +23,9 @@
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Serilog.Sinks.Console" />
+    <TrimmerRootAssembly Include="Serilog.Sinks.File" />
+  </ItemGroup>
+
 </Project>
