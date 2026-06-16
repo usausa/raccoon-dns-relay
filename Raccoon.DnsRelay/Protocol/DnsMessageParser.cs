@@ -169,6 +169,6 @@ internal static class DnsMessageParser
         33 => "SRV",
         65 => "HTTPS",
         255 => "ANY",
-        _ => string.Create(CultureInfo.InvariantCulture, $"TYPE{type}"),
+        _ => string.Create(CultureInfo.InvariantCulture, $"TYPE{type}")
     };
 }
