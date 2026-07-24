@@ -129,7 +129,3 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 [Install]
 WantedBy=multi-user.target
 ```
-
-## License
-
-MIT
