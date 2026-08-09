@@ -59,9 +59,16 @@ internal sealed class UpstreamDnsResolver : IDnsResolver
                 var transferred = false;
                 try
                 {
-                    var received = await socket.ReceiveAsync(buffer.Memory, SocketFlags.None, timeout.Token);
-                    if (received >= DnsHeader.Length)
+                    while (true)
                     {
+                        var received = await socket.ReceiveAsync(buffer.Memory, SocketFlags.None, timeout.Token);
+                        if (!IsExpectedResponse(query, buffer, received))
+                        {
+                            metrics.UpstreamFailure(name, "mismatch");
+                            log.WarnUpstreamResponseMismatch(endpoint, received);
+                            continue;
+                        }
+
                         log.DebugUpstreamResolved(endpoint, received);
                         transferred = true;
                         return new DnsResult(buffer, received);
@@ -90,5 +97,31 @@ internal sealed class UpstreamDnsResolver : IDnsResolver
         }
 
         return DnsResult.Empty;
+    }
+
+    private static bool IsExpectedResponse(DnsQuery query, RentedBuffer buffer, int received)
+    {
+        if (received < DnsHeader.Length)
+        {
+            return false;
+        }
+
+        var response = buffer.Span[..received];
+        if (!DnsHeader.TryRead(response, out var header))
+        {
+            return false;
+        }
+
+        if ((header.Id != query.TransactionId) || !header.IsResponse || (header.QuestionCount == 0))
+        {
+            return false;
+        }
+
+        if (!DnsMessageParser.TryReadQuestion(response, out var question))
+        {
+            return false;
+        }
+
+        return response.Slice(question.NameOffset, question.NameLength + 4).SequenceEqual(query.QuestionSpan);
     }
 }

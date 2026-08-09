@@ -83,6 +83,11 @@ internal sealed class CachingDnsResolver : IDnsResolver
             return;
         }
 
+        if (header.IsTruncated)
+        {
+            return;
+        }
+
         long ttlSeconds;
         if ((header.ResponseCode == NoError) && (header.AnswerCount > 0))
         {

@@ -21,6 +21,8 @@ internal readonly struct DnsHeader
 
     public bool IsResponse => (Flags & 0x8000) != 0;
 
+    public bool IsTruncated => (Flags & 0x0200) != 0;
+
     public int ResponseCode => Flags & 0x000F;
 
     public static bool TryRead(ReadOnlySpan<byte> message, out DnsHeader header)

@@ -54,6 +54,9 @@ internal static partial class Log
     [LoggerMessage(Level = LogLevel.Warning, Message = "Upstream {endpoint} socket error.")]
     public static partial void WarnUpstreamSocketError(this ILogger logger, EndPoint endpoint, Exception ex);
 
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Upstream {endpoint} response did not match the query ({bytes} bytes), discarded.")]
+    public static partial void WarnUpstreamResponseMismatch(this ILogger logger, EndPoint endpoint, int bytes);
+
     [LoggerMessage(Level = LogLevel.Debug, Message = "Resolved by upstream {endpoint} ({bytes} bytes).")]
     public static partial void DebugUpstreamResolved(this ILogger logger, EndPoint endpoint, int bytes);
 
