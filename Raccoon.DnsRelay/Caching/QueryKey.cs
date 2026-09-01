@@ -50,7 +50,7 @@ internal readonly struct QueryKey : IEquatable<QueryKey>
 
     public bool Equals(QueryKey other) => (hash == other.hash) && question.AsSpan().SequenceEqual(other.question);
 
-    public override bool Equals(object? obj) => obj is QueryKey other && Equals(other);
+    public override bool Equals(object? obj) => (obj is QueryKey other) && Equals(other);
 
     public override int GetHashCode() => (int)hash;
 }

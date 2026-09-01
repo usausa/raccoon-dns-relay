@@ -43,7 +43,7 @@ builder.Services.AddOptions<ServerSetting>()
 
 builder.Services.AddOptions<UpstreamSetting>()
     .Bind(builder.Configuration.GetSection(UpstreamSetting.SectionName))
-    .Validate(static o => o.Servers is { Length: > 0 } && Array.TrueForAll(o.Servers, static s => IPAddress.TryParse(s, out _)), "Upstream:Servers must contain at least one valid IP address.")
+    .Validate(static o => (o.Servers is { Length: > 0 }) && Array.TrueForAll(o.Servers, static s => IPAddress.TryParse(s, out _)), "Upstream:Servers must contain at least one valid IP address.")
     .Validate(static o => o.Port is >= 1 and <= 65535, "Upstream:Port must be between 1 and 65535.")
     .Validate(static o => o.TimeoutMs is >= 1 and <= 60000, "Upstream:TimeoutMs must be between 1 and 60000.")
     .ValidateOnStart();
@@ -59,7 +59,7 @@ builder.Services.AddOptions<CacheSetting>()
 
 builder.Services.AddOptions<TelemetrySetting>()
     .Bind(builder.Configuration.GetSection(TelemetrySetting.SectionName))
-    .Validate(static o => !o.Enabled || string.IsNullOrEmpty(o.Otlp.Endpoint) || Uri.TryCreate(o.Otlp.Endpoint, UriKind.Absolute, out _), "Telemetry:Otlp:Endpoint must be a valid absolute URI.")
+    .Validate(static o => !o.Enabled || String.IsNullOrEmpty(o.Otlp.Endpoint) || Uri.TryCreate(o.Otlp.Endpoint, UriKind.Absolute, out _), "Telemetry:Otlp:Endpoint must be a valid absolute URI.")
     .Validate(static o => !o.Enabled || !o.Prometheus.Enabled || (o.Prometheus.Port is >= 1 and <= 65535), "Telemetry:Prometheus:Port must be between 1 and 65535.")
     .ValidateOnStart();
 

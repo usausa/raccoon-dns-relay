@@ -36,7 +36,7 @@ internal static class OpenTelemetryExtensions
                     metrics.AddConsoleExporter();
                 }
 
-                if (!string.IsNullOrEmpty(options.Otlp.Endpoint))
+                if (!String.IsNullOrEmpty(options.Otlp.Endpoint))
                 {
                     metrics.AddOtlpExporter(exporter => ConfigureOtlp(exporter, options.Otlp));
                 }
@@ -63,7 +63,7 @@ internal static class OpenTelemetryExtensions
                     tracing.AddConsoleExporter();
                 }
 
-                if (!string.IsNullOrEmpty(options.Otlp.Endpoint))
+                if (!String.IsNullOrEmpty(options.Otlp.Endpoint))
                 {
                     tracing.AddOtlpExporter(exporter => ConfigureOtlp(exporter, options.Otlp));
                 }
@@ -76,7 +76,7 @@ internal static class OpenTelemetryExtensions
     private static void ConfigureOtlp(OtlpExporterOptions exporter, TelemetrySetting.OtlpSetting otlp)
     {
         exporter.Endpoint = new Uri(otlp.Endpoint!);
-        exporter.Protocol = string.Equals(otlp.Protocol, "HttpProtobuf", StringComparison.OrdinalIgnoreCase)
+        exporter.Protocol = String.Equals(otlp.Protocol, "HttpProtobuf", StringComparison.OrdinalIgnoreCase)
             ? OtlpExportProtocol.HttpProtobuf
             : OtlpExportProtocol.Grpc;
     }
