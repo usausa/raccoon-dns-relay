@@ -50,7 +50,7 @@ internal sealed class DnsCache : IDnsCache, IDisposable
             Evict();
         }
 
-        entries[QueryKey.From(question)] = new CacheEntry(response.ToArray(), expiresAtTicks, originalTtl);
+        entries[QueryKey.From(question)] = new CacheEntry([.. response], expiresAtTicks, originalTtl);
     }
 
     private void Evict()
