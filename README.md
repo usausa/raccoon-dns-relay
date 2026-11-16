@@ -3,7 +3,7 @@
 A service that relays client DNS queries (UDP) to upstream DNS servers.
 It runs as a Windows service / systemd daemon, with a TTL cache and OpenTelemetry-based observability.
 
-- .NET 10 / Worker service
+- .NET 11 / Worker service
 - UDP relay with upstream failover
 - Low-allocation design (`Span`, `ArrayPool`, raw `Socket`)
 - Efficient TTL cache (allocation-free lookup, TTL decrement, GC-friendly)
@@ -11,7 +11,7 @@ It runs as a Windows service / systemd daemon, with a TTL cache and OpenTelemetr
 
 ## Requirements
 
-- .NET 10 SDK / runtime
+- .NET 11 SDK / runtime
 
 ## Build
 
